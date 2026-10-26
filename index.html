@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RupeeFlow - Minimalist Personal Finance & Wealth Manager with zero-setup local storage, Indian Rupee formatting, budget tracking, and visual analytics.">
+  <title>RupeeFlow — Personal Finance & Wealth Manager</title>
+  
+  <!-- Modern Scandinavian Craft Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js for smooth interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- App Layout -->
+  <div class="app-container">
+    
+    <!-- Top Navigation Bar -->
+    <header class="navbar" id="app-navbar">
+      <div class="nav-brand">
+        <div class="brand-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 3h12M6 8h12M6 13l7.5 8M6 13h4a4 4 0 0 0 0-8H6"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">RupeeFlow</span>
+          <span class="brand-badge">Personal Ledger</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab-btn active" data-view="dashboard" id="tab-dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-tab-btn" data-view="transactions" id="tab-transactions">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          Transactions
+        </button>
+        <button class="nav-tab-btn" data-view="budgets" id="tab-budgets">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2h0V5z"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/></svg>
+          Budgets
+        </button>
+        <button class="nav-tab-btn" data-view="analytics" id="tab-analytics">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          Insights
+        </button>
+        <button class="nav-tab-btn" data-view="categories" id="tab-categories">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24"/></svg>
+          Categories
+        </button>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Quick Action Add Button -->
+        <button class="btn btn-primary" id="btn-open-add-modal" title="Add Transaction (Shortcut: N)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Add Transaction</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="icon-btn" id="btn-theme-toggle" title="Switch Theme (Dark/Light)">
+          <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+
+        <!-- Download & Persistence Button (Opens Storage & Backup Modal) -->
+        <button class="icon-btn" id="btn-open-settings" title="Data Storage, Backup &amp; Disk Sync">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- ================= VIEW 1: DASHBOARD ================= -->
+      <section class="view-panel active" id="view-dashboard">
+        <!-- Month Filter Banner -->
+        <div class="view-header">
+          <div>
+            <h1 class="page-title">Financial Overview</h1>
+            <p class="page-subtitle">Track your income, daily spends & financial health effortlessly.</p>
+          </div>
+          <div class="header-controls">
+            <div class="select-wrapper">
+              <select id="dashboard-month-select" class="form-select">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+            <button class="btn btn-outline" id="btn-quick-clear" title="Clear all transactions and start with a clean slate">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Start Fresh</span>
+            </button>
+            <button class="btn btn-outline" id="btn-seed-sample-data" title="Preview with realistic demo records">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+              <span>Demo Data</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards Grid -->
+        <div class="metrics-grid">
+          <!-- Total Income Card -->
+          <div class="metric-card income-card">
+            <div class="metric-header">
+              <span class="metric-label">Total Income</span>
+              <div class="metric-icon-badge income-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m17 7-10 10M17 17V7H7"/></svg>
+              </div>
+            </div>
+            <div class="metric-value currency-font" id="stat-total-income">₹0</div>
+            <div class="metric-footer">
+              <span class="metric-subtext" id="stat-income-tx-count">0 transactions this month</span>
+            </div>
+          </div>
+
+          <!-- Total Expenses Card -->
+          <div class="metric-card expense-card">
+            <div class="metric-header">
+              <span class="metric-label">Total Expenses</span>
+              <div class="metric-icon-badge expense-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m7 7 10 10M17 7v10H7"/></svg>
+              </div>
+            </div>
+            <div class="metric-value currency-font" id="stat-total-expense">₹0</div>
+            <div class="metric-footer">
+              <span class="metric-subtext" id="stat-expense-tx-count">0 expenses recorded</span>
+            </div>
+          </div>
+
+          <!-- Net Savings Card -->
+          <div class="metric-card net-card">
+            <div class="metric-header">
+              <span class="metric-label">Net Balance (Savings)</span>
+              <div class="metric-icon-badge net-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M16 10H9.5a2.5 2.5 0 0 0 0 5H14"/></svg>
+              </div>
+            </div>
+            <div class="metric-value currency-font" id="stat-net-balance">₹0</div>
+            <div class="metric-footer">
+              <span class="savings-rate-pill" id="stat-savings-rate">0% Savings Rate</span>
+            </div>
+          </div>
+
+          <!-- Monthly Budget Progress Card -->
+          <div class="metric-card budget-card">
+            <div class="metric-header">
+              <span class="metric-label">Budget Consumption</span>
+              <div class="metric-icon-badge budget-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+            </div>
+            <div class="metric-value currency-font" id="stat-budget-progress-text">0%</div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="dashboard-budget-bar" style="width: 0%;"></div>
+            </div>
+            <div class="metric-footer">
+              <span class="metric-subtext" id="stat-budget-remaining">No budget set yet</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Charts & Breakdown Grid -->
+        <div class="dashboard-grid-2col">
+          <!-- Expense Breakdown by Category -->
+          <div class="glass-card chart-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Top Expense Categories</h3>
+                <p class="card-subtitle">Where your money went this month</p>
+              </div>
+              <span class="badge badge-neutral" id="category-breakdown-count">0 Categories</span>
+            </div>
+            <div class="chart-content-split">
+              <div class="chart-canvas-wrapper doughnut-wrapper">
+                <canvas id="category-doughnut-chart"></canvas>
+                <div class="doughnut-center-info">
+                  <span class="center-label">Total Outflow</span>
+                  <span class="center-amount currency-font" id="doughnut-center-amount">₹0</span>
+                </div>
+              </div>
+              <div class="category-bars-list" id="dashboard-category-bars">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly Cashflow Trend -->
+          <div class="glass-card chart-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Cash Flow Trends</h3>
+                <p class="card-subtitle">Income vs Expenses over the last 6 months</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="cashflow-bar-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions Section -->
+        <div class="glass-card table-section">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Recent Transactions</h3>
+              <p class="card-subtitle">Latest entries for selected month</p>
+            </div>
+            <button class="btn btn-ghost" id="btn-see-all-tx">
+              View All Transactions &rarr;
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Title & Category</th>
+                  <th>Payment Method</th>
+                  <th>Type</th>
+                  <th class="text-right">Amount</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-recent-tx-body">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+            <div class="empty-state" id="dashboard-empty-tx" style="display: none;">
+              <div class="empty-icon">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted);"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>
+              </div>
+              <h4>Your Ledger is Fresh & Clean</h4>
+              <p>Record your first transaction with the button below, or preview with sample data.</p>
+              <button class="btn btn-primary" onclick="openAddModal()">Add First Transaction</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 2: TRANSACTIONS ================= -->
+      <section class="view-panel" id="view-transactions">
+        <div class="view-header">
+          <div>
+            <h1 class="page-title">All Transactions</h1>
+            <p class="page-subtitle">Search, filter and manage every single rupee.</p>
+          </div>
+          <div class="header-controls">
+            <button class="btn btn-outline" id="btn-export-csv-direct">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              <span>Export CSV</span>
+            </button>
+            <button class="btn btn-primary" onclick="openAddModal()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <span>New Entry</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="glass-card filter-toolbar">
+          <div class="search-input-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" id="tx-search-input" placeholder="Search by note, description, title..." class="form-input">
+          </div>
+
+          <div class="filters-row">
+            <select id="tx-filter-type" class="form-select">
+              <option value="ALL">All Types</option>
+              <option value="EXPENSE">Expense Only</option>
+              <option value="INCOME">Income Only</option>
+            </select>
+
+            <select id="tx-filter-category" class="form-select">
+              <option value="ALL">All Categories</option>
+              <!-- Populated dynamically -->
+            </select>
+
+            <select id="tx-filter-payment" class="form-select">
+              <option value="ALL">All Payment Modes</option>
+              <option value="UPI">UPI (GPay/PhonePe/Paytm)</option>
+              <option value="CARD">Credit / Debit Card</option>
+              <option value="NET_BANKING">Net Banking</option>
+              <option value="CASH">Cash</option>
+              <option value="BANK_TRANSFER">Bank Transfer / Cash Deposit (CDM)</option>
+            </select>
+
+            <input type="date" id="tx-filter-start-date" class="form-input date-input" title="Start Date">
+            <input type="date" id="tx-filter-end-date" class="form-input date-input" title="End Date">
+
+            <button class="btn btn-ghost" id="btn-reset-filters" title="Reset all filters">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Stats Summary Banner -->
+        <div class="filter-summary-strip">
+          <div class="summary-item">
+            <span>Filtered Transactions:</span>
+            <strong id="filtered-count">0</strong>
+          </div>
+          <div class="summary-item">
+            <span>Total Inflow:</span>
+            <strong class="text-income currency-font" id="filtered-income">₹0</strong>
+          </div>
+          <div class="summary-item">
+            <span>Total Outflow:</span>
+            <strong class="text-expense currency-font" id="filtered-expense">₹0</strong>
+          </div>
+          <div class="summary-item">
+            <span>Net Sum:</span>
+            <strong class="currency-font" id="filtered-net">₹0</strong>
+          </div>
+        </div>
+
+        <!-- Full Transactions Table -->
+        <div class="glass-card table-section">
+          <div class="table-container">
+            <table class="data-table" id="transactions-full-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Title & Note</th>
+                  <th>Category</th>
+                  <th>Payment Mode</th>
+                  <th>Type</th>
+                  <th class="text-right">Amount</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-full-body">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+
+            <div class="empty-state" id="tx-empty-state" style="display: none;">
+              <div class="empty-icon">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted);"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </div>
+              <h4>No matching records</h4>
+              <p>Try modifying your search query or reset the active filters.</p>
+            </div>
+          </div>
+
+          <!-- Pagination Bar -->
+          <div class="pagination-bar" id="tx-pagination-bar">
+            <span class="pagination-info" id="pagination-info">Showing 1 to 20</span>
+            <div class="pagination-controls">
+              <button class="btn btn-outline btn-sm" id="btn-prev-page" disabled>&larr; Previous</button>
+              <span class="current-page-badge" id="current-page-num">1</span>
+              <button class="btn btn-outline btn-sm" id="btn-next-page">Next &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 3: MONTHLY BUDGETS ================= -->
+      <section class="view-panel" id="view-budgets">
+        <div class="view-header">
+          <div>
+            <h1 class="page-title">Monthly Budgets & Caps</h1>
+            <p class="page-subtitle">Set an overall monthly spending limit, or assign category-specific caps to prevent overspending.</p>
+          </div>
+          <div class="header-controls">
+            <button class="btn btn-outline" id="btn-open-monthly-budget-modal" onclick="openMonthlyBudgetModal()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <span>Set Overall Budget</span>
+            </button>
+            <button class="btn btn-primary" id="btn-open-budget-modal" onclick="openBudgetModal()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <span>Set Category Budget</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Overall Budget Overview Card -->
+        <div class="glass-card budget-summary-card">
+          <div class="budget-summary-header">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem;">
+                <span class="text-secondary" style="font-weight: 600; font-size: 0.85rem;" id="budget-summary-type-label">Total Monthly Spend vs Overall Budget</span>
+                <button class="btn btn-outline btn-sm" id="btn-edit-monthly-cap" onclick="openMonthlyBudgetModal()" style="height: 26px; padding: 0 0.65rem; font-size: 0.725rem;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  <span id="btn-edit-monthly-cap-text">Set Monthly Budget</span>
+                </button>
+              </div>
+              <div class="budget-totals-row">
+                <span class="budget-spent-val currency-font" id="budget-sum-spent">₹0</span>
+                <span class="budget-separator">/</span>
+                <span class="budget-total-val currency-font" id="budget-sum-allocated">₹0</span>
+              </div>
+            </div>
+            <div class="budget-rate-badge" id="budget-overall-status-badge">
+              0% Used
+            </div>
+          </div>
+          <div class="progress-bar-container large-bar">
+            <div class="progress-bar-fill" id="budget-overall-bar" style="width: 0%;"></div>
+          </div>
+          <div class="budget-summary-footer">
+            <span id="budget-remaining-calc">₹0 Remaining</span>
+            <span id="budget-days-left">0 days left this month</span>
+          </div>
+
+          <!-- Master Envelope Allocation Strip (Active when overall monthly budget is set) -->
+          <div class="budget-allocation-strip" id="budget-allocation-strip" style="display: none;">
+            <div class="budget-allocation-info">
+              <span class="allocation-pill" id="alloc-pill-total">Master Budget: ₹0</span>
+              <span class="allocation-arrow">→</span>
+              <span class="allocation-pill pill-assigned" id="alloc-pill-assigned">Allocated: ₹0</span>
+              <span class="allocation-pill pill-unassigned" id="alloc-pill-unassigned">Unallocated Buffer: ₹0</span>
+            </div>
+            <div id="alloc-warning" class="allocation-warning" style="display: none;">
+              <span>⚠️</span>
+              <span id="alloc-warning-text">Category caps exceed overall budget</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Budgets Grid -->
+        <div class="budgets-grid" id="budgets-category-grid">
+          <!-- Dynamically populated with interactive budget progress cards -->
+        </div>
+
+        <div class="empty-state" id="budgets-empty-state" style="display: none;">
+          <div class="empty-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted);"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h4>No Category Caps Configured</h4>
+          <p id="budgets-empty-desc">You can track your spending under your overall monthly budget above, or optionally configure individual category caps below.</p>
+          <div style="display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-outline" onclick="openMonthlyBudgetModal()">Set Overall Monthly Budget</button>
+            <button class="btn btn-primary" onclick="openBudgetModal()">Set Category Budget</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 4: INSIGHTS & ANALYTICS ================= -->
+      <section class="view-panel" id="view-analytics">
+        <div class="view-header">
+          <div>
+            <h1 class="page-title">Financial Insights</h1>
+            <p class="page-subtitle">Deep dive into your spending habits, cash flow distribution, and trends.</p>
+          </div>
+          <div class="header-controls">
+            <select id="analytics-timeframe-select" class="form-select">
+              <option value="6">Last 6 Months</option>
+              <option value="12">Last 12 Months</option>
+              <option value="ALL">All Time</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="dashboard-grid-2col">
+          <!-- Monthly Inflow vs Outflow Bar Chart -->
+          <div class="glass-card chart-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Income vs Expenses History</h3>
+                <p class="card-subtitle">Monthly balance surplus or deficit</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrapper tall-chart">
+              <canvas id="analytics-flow-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Payment Mode Distribution -->
+          <div class="glass-card chart-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Payment Method Share</h3>
+                <p class="card-subtitle">UPI vs Cards vs Net Banking vs Cash</p>
+              </div>
+            </div>
+            <div class="chart-canvas-wrapper tall-chart">
+              <canvas id="analytics-payment-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Financial Highlights -->
+        <div class="glass-card analytics-stat-section mt-6">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Financial Health Summary</h3>
+              <p class="card-subtitle">Key metrics generated from your records</p>
+            </div>
+          </div>
+          <div class="analytics-stat-grid" id="analytics-stat-strip">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 5: CATEGORIES ================= -->
+      <section class="view-panel" id="view-categories">
+        <div class="view-header">
+          <div>
+            <h1 class="page-title">Categories Manager</h1>
+            <p class="page-subtitle">Customize, organize, and color-code your income & expense streams.</p>
+          </div>
+          <div class="header-controls">
+            <button class="btn btn-primary" id="btn-open-category-modal">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              <span>New Category</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="dashboard-grid-2col categories-grid">
+          <!-- Expense Categories -->
+          <div class="glass-card category-manager-card">
+            <div class="card-header">
+              <h3 class="card-title">Expense Categories</h3>
+              <span class="badge badge-expense" id="expense-cat-count">0</span>
+            </div>
+            <div class="category-list" id="expense-category-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Income Categories -->
+          <div class="glass-card category-manager-card">
+            <div class="card-header">
+              <h3 class="card-title">Income Categories</h3>
+              <span class="badge badge-income" id="income-cat-count">0</span>
+            </div>
+            <div class="category-list" id="income-category-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. Add / Edit Transaction Modal -->
+  <div class="modal-backdrop" id="modal-transaction">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-tx-title">Add Transaction</h3>
+        <button class="modal-close-btn" onclick="closeTxModal()">&times;</button>
+      </div>
+      <form id="tx-form">
+        <input type="hidden" id="tx-id-input">
+
+        <!-- Type Selector (Income vs Expense) -->
+        <div class="form-group">
+          <label class="form-label">Transaction Type</label>
+          <div class="type-toggle-group">
+            <label class="type-toggle-option expense-opt">
+              <input type="radio" name="tx-type" value="EXPENSE" checked id="tx-type-expense">
+              <span>Expense</span>
+            </label>
+            <label class="type-toggle-option income-opt">
+              <input type="radio" name="tx-type" value="INCOME" id="tx-type-income">
+              <span>Income</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Amount (in Rupees) -->
+        <div class="form-group">
+          <label class="form-label" for="tx-amount">Amount in Rupees (₹)*</label>
+          <div class="amount-input-box">
+            <span class="currency-symbol">₹</span>
+            <input type="number" step="0.01" min="0.01" id="tx-amount" required placeholder="0.00" class="form-input amount-field">
+          </div>
+          <span class="form-hint" id="tx-amount-in-words"></span>
+        </div>
+
+        <!-- Title / Description -->
+        <div class="form-group">
+          <label class="form-label" for="tx-title">Title / Payee*</label>
+          <input type="text" id="tx-title" required placeholder="e.g. Swiggy, Monthly Rent, Salary, Zomato" class="form-input">
+        </div>
+
+        <!-- Category & Date Row -->
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label" for="tx-category">Category*</label>
+            <select id="tx-category" required class="form-select">
+              <!-- Populated dynamically based on selected Type -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tx-date">Date*</label>
+            <input type="date" id="tx-date" required class="form-input">
+          </div>
+        </div>
+
+        <!-- Payment Mode -->
+        <div class="form-group">
+          <label class="form-label" for="tx-payment">Payment Method</label>
+          <select id="tx-payment" class="form-select">
+            <option value="UPI">UPI (Google Pay, PhonePe, Paytm)</option>
+            <option value="CARD">Credit / Debit Card</option>
+            <option value="NET_BANKING">Net Banking</option>
+            <option value="CASH">Cash</option>
+            <option value="BANK_TRANSFER">Bank Transfer / Cash Deposit (CDM)</option>
+          </select>
+        </div>
+
+        <!-- Optional Notes -->
+        <div class="form-group">
+          <label class="form-label" for="tx-note">Optional Note (tags, bill reference)</label>
+          <input type="text" id="tx-note" placeholder="e.g. Split with Rohan, Invoice #402" class="form-input" maxlength="200">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeTxModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-tx">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Overall Monthly Budget Modal -->
+  <div class="modal-backdrop" id="modal-monthly-budget">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Set Overall Monthly Budget</h3>
+        <button class="modal-close-btn" onclick="closeMonthlyBudgetModal()">&times;</button>
+      </div>
+      <form id="monthly-budget-form">
+        <div class="form-group">
+          <label class="form-label" for="overall-budget-amount-input">Overall Monthly Spending Limit (₹)*</label>
+          <div class="amount-input-box">
+            <span class="currency-symbol">₹</span>
+            <input type="number" step="500" min="0" id="overall-budget-amount-input" required placeholder="e.g. 50000" class="form-input amount-field">
+          </div>
+          <span class="form-hint">Sets a master spending cap for all expenses across all categories for the month. Enter 0 to remove.</span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeMonthlyBudgetModal()">Cancel</button>
+          <button type="button" class="btn btn-ghost text-danger" id="btn-remove-monthly-budget" style="margin-right:auto; display:none;">Remove Cap</button>
+          <button type="submit" class="btn btn-primary">Save Monthly Limit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Set Category Budget Modal -->
+  <div class="modal-backdrop" id="modal-budget">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Set Monthly Category Budget</h3>
+        <button class="modal-close-btn" onclick="closeBudgetModal()">&times;</button>
+      </div>
+      <form id="budget-form">
+        <!-- Live Envelope Allocation Helper -->
+        <div class="budget-modal-envelope-helper" id="budget-envelope-helper" style="display: none;">
+          <div class="envelope-stat">
+            <span class="envelope-lbl">Overall Monthly Cap</span>
+            <span class="envelope-val" id="env-modal-overall">₹0</span>
+          </div>
+          <div class="envelope-stat">
+            <span class="envelope-lbl">Unallocated Pool</span>
+            <span class="envelope-val text-income" id="env-modal-available">₹0</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="budget-category-select">Select Expense Category*</label>
+          <select id="budget-category-select" required class="form-select">
+            <!-- Populated with expense categories -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="budget-amount-input">Monthly Budget Limit (₹)*</label>
+          <div class="amount-input-box">
+            <span class="currency-symbol">₹</span>
+            <input type="number" step="100" min="100" id="budget-amount-input" required placeholder="e.g. 15000" class="form-input amount-field">
+          </div>
+          <span class="form-hint" id="budget-amount-envelope-hint">You will be alerted as your spending approaches 80% and 100% of this cap.</span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeBudgetModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Budget</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Add Custom Category Modal -->
+  <div class="modal-backdrop" id="modal-category">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Category</h3>
+        <button class="modal-close-btn" onclick="closeCategoryModal()">&times;</button>
+      </div>
+      <form id="category-form">
+        <div class="form-group">
+          <label class="form-label">Category Type</label>
+          <div class="type-toggle-group">
+            <label class="type-toggle-option expense-opt">
+              <input type="radio" name="cat-type" value="EXPENSE" checked id="cat-type-expense">
+              <span>Expense</span>
+            </label>
+            <label class="type-toggle-option income-opt">
+              <input type="radio" name="cat-type" value="INCOME" id="cat-type-income">
+              <span>Income</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="cat-name-input">Category Name*</label>
+          <input type="text" id="cat-name-input" required placeholder="e.g. Gym & Fitness, Gadgets, Pet Care" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="cat-color-input">Category Theme Color</label>
+          <div class="color-picker-row">
+            <input type="color" id="cat-color-input" value="#6366F1" class="color-swatch-input">
+            <span class="color-hex-label" id="cat-color-label">#6366F1</span>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeCategoryModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Backup, Export & Settings Modal -->
+  <div class="modal-backdrop" id="modal-settings">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <h3 class="modal-title">Data Storage &amp; Persistence</h3>
+        <button class="modal-close-btn" onclick="closeSettingsModal()">&times;</button>
+      </div>
+      <div class="settings-body">
+        
+        <!-- Dual Storage Overview Cards -->
+        <div class="storage-cards-grid">
+          <div class="storage-card">
+            <div class="storage-card-header">
+              <div class="storage-card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12H2M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11zM6 16h.01M10 16h.01"/></svg>
+                <span>Local Disk Storage</span>
+              </div>
+              <div id="storage-status-disk"><span class="status-badge badge-active">Connected (expenses.json)</span></div>
+            </div>
+            <p class="text-muted text-sm">Automatically syncs all transactions to <code>expenses.json</code> in your project folder. Your data stays safe even if you close the browser, clear history, or switch browsers.</p>
+          </div>
+
+          <div class="storage-card">
+            <div class="storage-card-header">
+              <div class="storage-card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M2 8h20M6 4v4"/></svg>
+                <span>Browser LocalStorage</span>
+              </div>
+              <div id="storage-status-local"><span class="status-badge badge-active">Active</span></div>
+            </div>
+            <p class="text-muted text-sm">Instant zero-latency browser memory. Works offline anywhere without setup, so anyone can use the app seamlessly.</p>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h4>Dual Auto-Sync Guarantee</h4>
+            <p class="text-muted" id="storage-last-saved">Every transaction or budget added is simultaneously mirrored to both storage engines.</p>
+          </div>
+          <button class="btn btn-outline" id="btn-manual-sync">Sync to Disk Now</button>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h4>Export Data Backup</h4>
+            <p class="text-muted">Download physical copy of your ledger anytime for Excel, Google Sheets, or safe keeping.</p>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-outline" id="btn-export-json">Export JSON</button>
+            <button class="btn btn-outline" id="btn-export-csv">Export CSV</button>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h4>Restore from Backup</h4>
+            <p class="text-muted">Load transactions from a previously saved JSON backup file.</p>
+          </div>
+          <div>
+            <input type="file" id="import-json-file" accept=".json" style="display: none;">
+            <button class="btn btn-outline" onclick="document.getElementById('import-json-file').click()">Import JSON File</button>
+          </div>
+        </div>
+
+        <div class="setting-item danger-zone">
+          <div>
+            <h4 class="text-danger">Reset All Data</h4>
+            <p class="text-muted">Clear all stored records and reset to default empty state.</p>
+          </div>
+          <button class="btn btn-danger" id="btn-reset-all-data">Reset Everything</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- App Logic -->
+  <script src="app.js?v=4"></script>
+</body>
+</html>

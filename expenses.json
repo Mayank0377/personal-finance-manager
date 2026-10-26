@@ -1,0 +1,176 @@
+{
+  "transactions": [
+    {
+      "id": "tx-1793027849342-xrvw",
+      "type": "EXPENSE",
+      "amount": 2116.46,
+      "title": "Mayank to Aditya",
+      "categoryId": "cat-misc",
+      "date": "2026-10-26",
+      "paymentMethod": "UPI",
+      "note": "Mayank owed Aditya",
+      "createdAt": "2026-10-26T15:17:29.342Z",
+      "updatedAt": "2026-10-26T15:18:17.881Z"
+    },
+    {
+      "id": "tx-1793027740238-csp4",
+      "type": "INCOME",
+      "amount": 5200,
+      "title": "Daddy",
+      "categoryId": "cat-allowance",
+      "date": "2026-10-26",
+      "paymentMethod": "BANK_TRANSFER",
+      "note": "",
+      "createdAt": "2026-10-26T15:15:40.238Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat-food",
+      "name": "Food & Dining",
+      "type": "EXPENSE",
+      "color": "#f97316",
+      "icon": "🍽️",
+      "isDefault": true
+    },
+    {
+      "id": "cat-groceries",
+      "name": "Groceries & Mart",
+      "type": "EXPENSE",
+      "color": "#10b981",
+      "icon": "🛒",
+      "isDefault": true
+    },
+    {
+      "id": "cat-rent",
+      "name": "Rent & Maintenance",
+      "type": "EXPENSE",
+      "color": "#8b5cf6",
+      "icon": "🏠",
+      "isDefault": true
+    },
+    {
+      "id": "cat-bills",
+      "name": "Utilities & Bills",
+      "type": "EXPENSE",
+      "color": "#06b6d4",
+      "icon": "⚡",
+      "isDefault": true
+    },
+    {
+      "id": "cat-transport",
+      "name": "Transport & Fuel",
+      "type": "EXPENSE",
+      "color": "#3b82f6",
+      "icon": "🚗",
+      "isDefault": true
+    },
+    {
+      "id": "cat-shopping",
+      "name": "Shopping & E-Commerce",
+      "type": "EXPENSE",
+      "color": "#ec4899",
+      "icon": "🛍️",
+      "isDefault": true
+    },
+    {
+      "id": "cat-health",
+      "name": "Health & Pharmacy",
+      "type": "EXPENSE",
+      "color": "#ef4444",
+      "icon": "💊",
+      "isDefault": true
+    },
+    {
+      "id": "cat-ott",
+      "name": "Entertainment & OTT",
+      "type": "EXPENSE",
+      "color": "#a855f7",
+      "icon": "🎬",
+      "isDefault": true
+    },
+    {
+      "id": "cat-invest",
+      "name": "Investments & SIP",
+      "type": "EXPENSE",
+      "color": "#14b8a6",
+      "icon": "📈",
+      "isDefault": true
+    },
+    {
+      "id": "cat-emi",
+      "name": "EMI & Loans",
+      "type": "EXPENSE",
+      "color": "#f43f5e",
+      "icon": "🏦",
+      "isDefault": true
+    },
+    {
+      "id": "cat-misc",
+      "name": "General / Other",
+      "type": "EXPENSE",
+      "color": "#64748b",
+      "icon": "📦",
+      "isDefault": true
+    },
+    {
+      "id": "cat-salary",
+      "name": "Monthly Salary",
+      "type": "INCOME",
+      "color": "#10b981",
+      "icon": "💼",
+      "isDefault": true
+    },
+    {
+      "id": "cat-freelance",
+      "name": "Freelance & Consulting",
+      "type": "INCOME",
+      "color": "#3b82f6",
+      "icon": "💻",
+      "isDefault": true
+    },
+    {
+      "id": "cat-business",
+      "name": "Business Income",
+      "type": "INCOME",
+      "color": "#8b5cf6",
+      "icon": "🏢",
+      "isDefault": true
+    },
+    {
+      "id": "cat-invest-returns",
+      "name": "Dividends & Interest",
+      "type": "INCOME",
+      "color": "#eab308",
+      "icon": "💰",
+      "isDefault": true
+    },
+    {
+      "id": "cat-cashback",
+      "name": "Cashback & Rewards",
+      "type": "INCOME",
+      "color": "#06b6d4",
+      "icon": "🎁",
+      "isDefault": true
+    },
+    {
+      "id": "cat-other-inc",
+      "name": "Other Inflow",
+      "type": "INCOME",
+      "color": "#64748b",
+      "icon": "💵",
+      "isDefault": true
+    },
+    {
+      "id": "cat-allowance",
+      "name": "Allowance & Family Support",
+      "type": "INCOME",
+      "color": "#588157",
+      "icon": "",
+      "isDefault": true
+    }
+  ],
+  "budgets": {},
+  "monthlyBudget": 0,
+  "lastSaved": "2026-10-26T16:28:27.578Z"
+}
