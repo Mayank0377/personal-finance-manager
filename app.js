@@ -2170,3 +2170,11 @@ function hexToRgb(hex) {
   const num = parseInt(c, 16);
   return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
 }
+
+// 18. PWA Service Worker Registration
+if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+

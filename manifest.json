@@ -1,0 +1,19 @@
+{
+  "name": "RupeeFlow — Personal Finance & Wealth Manager",
+  "short_name": "RupeeFlow",
+  "description": "Minimalist Personal Finance & Wealth Manager with zero-setup local storage, Indian Rupee formatting, budget tracking, and visual analytics.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2b3a42",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
