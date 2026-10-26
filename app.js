@@ -2177,14 +2177,10 @@ let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  const navBtn = document.getElementById('btn-install-pwa');
-  if (navBtn) navBtn.style.display = 'inline-flex';
 });
 
 window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
-  const navBtn = document.getElementById('btn-install-pwa');
-  if (navBtn) navBtn.style.display = 'none';
   showToast('RupeeFlow installed successfully!', 'success');
 });
 
@@ -2194,8 +2190,6 @@ function triggerPWAInstall() {
     deferredPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
         showToast('Adding RupeeFlow to home screen...', 'success');
-        const navBtn = document.getElementById('btn-install-pwa');
-        if (navBtn) navBtn.style.display = 'none';
       }
       deferredPrompt = null;
     });
