@@ -2171,10 +2171,50 @@ function hexToRgb(hex) {
   return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
 }
 
-// 18. PWA Service Worker Registration
+// 18. PWA Service Worker & Mobile Installation
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const navBtn = document.getElementById('btn-install-pwa');
+  if (navBtn) navBtn.style.display = 'inline-flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  const navBtn = document.getElementById('btn-install-pwa');
+  if (navBtn) navBtn.style.display = 'none';
+  showToast('RupeeFlow installed successfully!', 'success');
+});
+
+function triggerPWAInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        showToast('Adding RupeeFlow to home screen...', 'success');
+        const navBtn = document.getElementById('btn-install-pwa');
+        if (navBtn) navBtn.style.display = 'none';
+      }
+      deferredPrompt = null;
+    });
+  } else {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      alert('To install on iPhone:\n1. Tap the Share icon (square with arrow) at the bottom of Safari.\n2. Tap "Add to Home Screen".');
+    } else {
+      alert('To install on Android / Chrome:\n1. Tap the 3 dots menu (⋮) in the top right of Chrome.\n2. Tap "Add to Home screen" or "Install app".');
+    }
+  }
+}
+
+window.triggerPWAInstall = triggerPWAInstall;
+
 if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
+
 
