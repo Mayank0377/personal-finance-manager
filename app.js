@@ -359,7 +359,21 @@ function setupEventListeners() {
   // Add Modals triggers
   document.getElementById('btn-open-add-modal').addEventListener('click', () => openAddModal());
   document.getElementById('btn-quick-clear').addEventListener('click', startFresh);
-  document.getElementById('btn-seed-sample-data').addEventListener('click', () => seedSampleTransactions(true));
+
+  // Dev-only feature: Show Demo Data button only in local development (localhost / 127.0.0.1) or with ?dev=true
+  const isDevMode = window.location.hostname === 'localhost' || 
+                    window.location.hostname === '127.0.0.1' || 
+                    new URLSearchParams(window.location.search).get('dev') === 'true';
+
+  const btnSeed = document.getElementById('btn-seed-sample-data');
+  if (btnSeed) {
+    if (isDevMode) {
+      btnSeed.style.display = 'inline-flex';
+      btnSeed.addEventListener('click', () => seedSampleTransactions(true));
+    } else {
+      btnSeed.style.display = 'none';
+    }
+  }
   document.getElementById('btn-see-all-tx').addEventListener('click', () => switchView('transactions'));
   document.getElementById('btn-open-budget-modal').addEventListener('click', openBudgetModal);
   
